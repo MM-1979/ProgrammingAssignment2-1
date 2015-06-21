@@ -3,15 +3,25 @@
 # This function creates a special "matrix" object that can cache its inverse.
 
 makeCacheMatrix <- function(x=matrix()) {
-    inv <- NULL   # Initializes inverse matrix to NULL
-    
-    set <- function(y) {   # Sets the value of the matrix
+    # Initializes inverse matrix to NULL
+    inv <- NULL  
+
+    # Sets the value of the matrix passed to the function
+    set <- function(y) {   
         x <<- y
         inv <<- NULL
     }
-    get <- function () x   # Gets the value of the matrix (passed through makeCacheMatrix call)
-    setInverse <- function(solve) inv <<- solve   #sets inverse matrix
-    getInverse <- function() inv   # gets inverse matrix
+
+    # Gets the value of the matrix (passed through makeCacheMatrix call)
+    get <- function () x
+
+    # store inverse matrix
+    setInverse <- function(solve) inv <<- solve  
+
+    # gets inverse matrix
+    getInverse <- function() inv  
+
+    # class returned is a list of functions
     list(set=set, get=get, setInverse=setInverse, getInverse=getInverse)
 }
 
@@ -20,16 +30,21 @@ makeCacheMatrix <- function(x=matrix()) {
 # should retrieve the inverse from the cache.
 
 cacheSolve <- function(x, ...) {
-    # Sets variable with data from makeCacheMatrix function (either NULL or cached data)
+    # Checks variable with data from makeCacheMatrix function (either NULL or cached data)
     inv <- x$getInverse()
-    
-    if(!is.null(inv)) {   # if inv is not NULL, returns inverse matrix 
+
+    # if inv is not NULL, returns inverse matrix 
+    if(!is.null(inv)) {   
         message("Getting cached data")
         return(inv)
     }
-    
-    data <- x$get()  # if inv is NULL, data gets the matrix of x
-    inv <- solve(data, ...)  # inv is set to the inverse matrix
-    x$setInverse(inv)   # the inverse matrix is cached
-    inv   # the inverse matrix is returned
+
+    # if inv is NULL, data gets the matrix of x
+    data <- x$get()  
+    # inv is set to the inverse matrix (calculated here)
+    inv <- solve(data, ...)  
+    # the inverse matrix is cached
+    x$setInverse(inv)   
+    # the inverse matrix is returned
+    inv   
 }
